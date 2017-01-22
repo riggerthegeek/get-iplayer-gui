@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html ng-app="get-iplayer-gui">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="x-ua-compatible" content="ie=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title state-title="UNTITLED" pattern="NodeDB - %s"></title>
+
+        <link href="styles/main.css" rel="stylesheet" />
+
+        <script src="scripts/main.js"></script>
+        <script src="scripts/templates.js"></script>
+    </head>
+
+    <body class="site">
+
+        <header class="header" ui-view="header"></header>
+        <main class="site-content" ui-view="content"></main>
+        <footer class="footer" ui-view="footer"></footer>
+
+    </body>
+
+</html>
+

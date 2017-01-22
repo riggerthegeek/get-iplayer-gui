@@ -1,0 +1,18 @@
+{
+  "generator-angular": {
+    "name": "get-iplayer-gui",
+    "description": "A cross-platform tool for managing all databases",
+    "directivePrefix": "gi",
+    "plugins": {
+      "angular": true,
+      "bootstrap": true,
+      "font_awesome": true,
+      "jquery": false,
+      "ngBlueprint": false,
+      "ngPageTitle": false,
+      "router": true,
+      "translate": true
+    },
+    "npm_name": "get-iplayer-gui"
+  }
+}

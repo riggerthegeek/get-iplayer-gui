@@ -1,0 +1,8 @@
+{
+  "application/javascript": {
+    "presets": [
+      "latest"
+    ],
+    "sourceMaps": "inline"
+  }
+}

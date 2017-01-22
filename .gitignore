@@ -35,3 +35,17 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
+
+.idea
+.DS_Store
+build
+/tmp/
+/src/styles/**/*.css
+/src/styles/**/*.css.map
+/.sass-cache/
+/drivers
+/src/scripts/config.js
+/src/scripts/templates.js
+/src/styles/*.scss
+/src/scripts/themes.js
+/dist
