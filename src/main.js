@@ -24,7 +24,6 @@ let mainWindow;
 function createWindow () {
 
     mainWindow = new BrowserWindow({
-        icon: path.join(__dirname, "assets", "img", "logo.png"),
         minHeight: 600,
         minWidth: 993, // Prevents us having to faff about with the mobile view
         title: pkg.name
