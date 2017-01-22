@@ -24,8 +24,8 @@ let mainWindow;
 function createWindow () {
 
     mainWindow = new BrowserWindow({
-        minHeight: 600,
-        minWidth: 993, // Prevents us having to faff about with the mobile view
+        maxHeight: 600,
+        maxWidth: 800,
         title: pkg.name
     });
 

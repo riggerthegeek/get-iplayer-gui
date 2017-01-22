@@ -24,16 +24,20 @@ import "angular-hotkeys";
 import "angular-sanitize";
 import "angular-ui-router";
 import "angular-ui-router.statehelper";
+import "ng-page-title";
 
 /* Files */
 
 import configRoute from "./config/routes";
+
+import controllerDownload from "./controller/download";
 
 /* Create an empty template module - any cached templates will live in here */
 angular.module("templates.get-iplayer-gui", []);
 
 /* Get the local modules */
 const modules = [
+    "ngPageTitle",
     "ngSanitize",
     "templates.get-iplayer-gui",
     "ui.router",
@@ -53,6 +57,7 @@ app.config(configRoute);
 /*! Constants */
 
 /*! Controllers */
+app.controller("DownloadCtrl", controllerDownload);
 
 /*! Directives */
 

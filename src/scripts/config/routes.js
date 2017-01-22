@@ -17,24 +17,18 @@ export default (stateHelperProvider, $urlRouterProvider) => {
             abstract: true,
             children: [{
                 name: "download",
-                url: "download"
-            }]
-        })
-        .state({
-            name: "error",
-            data: {
-                pageTitle: "{{ 'PAGE_TITLES.ERROR' | translate }}"
-            },
-            params: {
-                error: null
-            },
-            views: {
-                "content@": {
-                    controller: "ErrorCtrl",
-                    controllerAs: "vm",
-                    templateUrl: "src/views/controller/Error.html"
+                data: {
+                    pageTitle: "Download"
+                },
+                url: "download",
+                views: {
+                    "content@": {
+                        controller: "DownloadCtrl",
+                        controllerAs: "vm",
+                        templateUrl: "views/controller/download.html"
+                    }
                 }
-            }
+            }]
         });
 
     $urlRouterProvider.otherwise("/download");
