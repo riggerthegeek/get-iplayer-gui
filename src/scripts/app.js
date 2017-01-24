@@ -32,6 +32,8 @@ import configRoute from "./config/routes";
 
 import controllerDownload from "./controller/download";
 
+import serviceGetIplayer from "./services/getIplayer";
+
 /* Create an empty template module - any cached templates will live in here */
 angular.module("templates.get-iplayer-gui", []);
 
@@ -68,6 +70,7 @@ app.controller("DownloadCtrl", controllerDownload);
 /*! Providers */
 
 /*! Services */
+app.service("getIplayer", serviceGetIplayer);
 
 /*! Values */
 

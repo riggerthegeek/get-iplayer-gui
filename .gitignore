@@ -46,6 +46,5 @@ build
 /drivers
 /src/scripts/config.js
 /src/scripts/templates.js
-/src/styles/*.scss
 /src/scripts/themes.js
 /dist

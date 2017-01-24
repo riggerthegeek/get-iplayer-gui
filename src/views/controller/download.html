@@ -1,1 +1,37 @@
-hello
+<div class="container-fluid">
+
+    <form ng-submit="vm.submit()">
+
+        <div class="row">
+
+            <div class="col-xs-offset-2 col-xs-8">
+
+                <div class="form-group">
+
+                    <div class="input-group">
+
+                        <input
+                            ng-model="vm.search"
+                            type="text"
+                            class="form-control"
+                            placeholder="Search for..." />
+
+                        <span class="input-group-btn">
+
+                            <button class="btn btn-primary" type="submit">
+                                Go!
+                            </button>
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
