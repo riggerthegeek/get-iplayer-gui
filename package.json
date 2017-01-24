@@ -8,7 +8,7 @@
     "ci": "npm test -s && npm run compile -s",
     "compile": "npm run precompile && electron-packager tmp --icon src/assets/img/logo.png --platform linux,win32 --arch ia32,x64,armv7l --out build --overwrite true --ignore .idea && npm run compile:mac",
     "compile:mac": "electron-packager tmp --icon src/assets/img/logo.icns --platform=darwin --arch=x64 --out build --overwrite true --ignore .idea",
-    "compile:templates": "npm-html2js --input src/views/**/**/*.html --output src/scripts/templates.js --module templates.nodedb",
+    "compile:templates": "npm-html2js --input src/views/**/**/*.html --output src/scripts/templates.js --module templates.get-iplayer-gui",
     "compile:tests": "babel test --source-maps true --out-dir tmp/test",
     "copy": "npm run copy:assets; npm run copy:index; npm run copy:translate; npm run copy:pkg",
     "copy:assets": "cp -Rf src/assets tmp/src",
