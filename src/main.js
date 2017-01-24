@@ -24,8 +24,12 @@ let mainWindow;
 function createWindow () {
 
     mainWindow = new BrowserWindow({
+        minimizable: false,
+        maximizable: false,
         maxHeight: 600,
         maxWidth: 800,
+        minHeight: 600,
+        minWidth: 800,
         title: pkg.name
     });
 
@@ -34,8 +38,6 @@ function createWindow () {
     if (datatypes.setBool(process.env.SHOW_DEV_TOOLS, false)) {
         webContents.openDevTools();
     }
-
-    mainWindow.maximize();
 
     mainWindow.loadURL(`file://${__dirname}/index.html`);
 
