@@ -1,5 +1,27 @@
 <div class="container-fluid">
 
+    <div class="row">
+
+        <div class="col-xs-3">
+            <button
+                ng-click="vm.download()"
+                type="button"
+                title="Download"
+                class="btn btn-success">
+                <i class="fa fa-fw fa-3x fa-play-circle"></i>
+            </button>
+        </div>
+
+        <div class="col-xs-3">
+
+        </div>
+
+        <div class="col-xs-3">
+
+        </div>
+
+    </div>
+
     <form ng-submit="vm.submit()">
 
         <div class="row">
@@ -43,6 +65,15 @@
 
                 </div>
 
+                <div ng-repeat="(key, type) in vm.allTypes" class="checkbox">
+                    <label>
+                        <input
+                            type="checkbox"
+                            ng-model="vm.types[key]" />
+                        {{ type }}
+                    </label>
+                </div>
+
             </div>
 
         </div>
@@ -55,22 +86,56 @@
 
             <thead>
                 <tr>
-                    <th width="50%">Title</th>
-                    <th width="25%  ">Channel</th>
+                    <th>Title</th>
+                    <th>Episode</th>
+                    <th>Channel</th>
                     <th colspan="2">Type</th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr ng-repeat="prog in vm.searchResult">
-                    <td>{{ prog.title}}</td>
+                    <td>{{ prog.title }}</td>
+                    <td>{{ prog.episode }}</td>
                     <td>{{ prog.channel }}</td>
-                    <td>{{ prog.type }}</td>
+                    <td>{{ vm.allTypes[prog.type] }}</td>
                     <td>
-                        <button ng-click="vm.addToQueue(prog)" class="btn btn-primary">
-                            Select
-                        </button>
+                        <div class="btn-group">
+                            <button ng-click="vm.getInfo(prog)" class="btn btn-default">
+                                <i class="fa fa-info-circle"></i>
+                            </button>
+
+                            <button ng-click="vm.addToQueue(prog)" class="btn btn-primary">
+                                Select
+                            </button>
+                        </div>
                     </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="row">
+
+        <table class="table table-hover table-vertical-align">
+
+            <thead>
+                <tr>
+                    <th>PID</th>
+                    <th>Status</th>
+                    <th>Title</th>
+                    <th>Episode</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat="prog in vm.queue">
+                    <td>{{ prog.pid }}</td>
+                    <td>{{ prog.status }}</td>
+                    <td>{{ prog.title }}</td>
+                    <td>{{ prog.episode }}</td>
                 </tr>
             </tbody>
 
