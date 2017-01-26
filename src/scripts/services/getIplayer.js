@@ -3,31 +3,83 @@
  */
 
 /* Node modules */
-import {exec} from "child_process";
+import {exec, spawn} from "child_process";
 
 /* Third-party modules */
 
 /* Files */
 
+const getIplayer = "get_iplayer";
+
 export default class GetIplayer {
 
-    search (search, type) {
+    refresh (force = false) {
 
         return new Promise((resolve, reject) => {
 
-            exec(`get_iplayer --type=${type} --nocopyright ${search}`, (err, stdout) => {
+            const forceFlag = force ? "--force" : "";
+
+            exec(`${getIplayer} --refresh ${forceFlag}`, (err, stdout, stderr) => {
+                console.log(err);
+                console.log(stdout);
+                console.log(stderr);
                 if (err) {
                     reject(err);
                     return;
                 }
 
-                resolve(GetIplayer.parseOutput(stdout));
+                console.log(stdout);
             });
 
         });
 
     }
 
+    /**
+     * Search
+     *
+     * Searches for a programme by type
+     *
+     * @param {string} search
+     * @param {string} type
+     * @returns {Promise}
+     */
+    search (search, type) {
+
+        return new Promise((resolve, reject) => {
+
+            if (!search) {
+                resolve([]);
+                return;
+            }
+
+            const cmd = spawn(getIplayer, [
+                `--type=${type}`,
+                "--nocopyright",
+                search
+            ]);
+
+            let result = "";
+
+            cmd.stdout.on("data", data => result += data);
+
+            cmd
+                .on("error", reject)
+                .on("close", () => resolve(GetIplayer.parseOutput(result)));
+
+        });
+
+    }
+
+    /**
+     * Parse Output
+     *
+     * Parses the output into an array of
+     * objects
+     *
+     * @param {string} output
+     * @returns {object[]}
+     */
     static parseOutput (output) {
         return output.split("\n")
             .reduce((result, line) => {

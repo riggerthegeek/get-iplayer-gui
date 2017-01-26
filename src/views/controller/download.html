@@ -16,11 +16,26 @@
                             class="form-control"
                             placeholder="Search for..." />
 
-                        <span class="input-group-btn">
+                        <span
+                            ng-if="!vm.running"
+                            class="input-group-btn">
 
-                            <button class="btn btn-primary" type="submit">
-                                Go!
+                            <button
+                                class="btn btn-primary"
+                                type="submit">
+                                <i class="fa fa-fw fa-search"></i>
                             </button>
+
+                        </span>
+
+                        <span
+                            ng-if="vm.running"
+                            class="input-group-btn">
+
+                            <span
+                                class="disabled btn btn-primary">
+                                <i class="fa fa-fw fa-spin fa-spinner"></i>
+                            </span>
 
                         </span>
 
@@ -33,5 +48,34 @@
         </div>
 
     </form>
+
+    <div class="row">
+
+        <table class="table table-hover table-vertical-align">
+
+            <thead>
+                <tr>
+                    <th width="50%">Title</th>
+                    <th width="25%  ">Channel</th>
+                    <th colspan="2">Type</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat="prog in vm.searchResult">
+                    <td>{{ prog.title}}</td>
+                    <td>{{ prog.channel }}</td>
+                    <td>{{ prog.type }}</td>
+                    <td>
+                        <button ng-click="vm.addToQueue(prog)" class="btn btn-primary">
+                            Select
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+
+    </div>
 
 </div>

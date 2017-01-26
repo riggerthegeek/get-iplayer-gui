@@ -1,3 +1,15 @@
 $icon-font-path: '../assets/fonts/bootstrap/';
 
 @import '../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
+
+.table-vertical-align {
+
+    tbody {
+        tr {
+            td {
+                vertical-align: middle;
+            }
+        }
+    }
+
+}
