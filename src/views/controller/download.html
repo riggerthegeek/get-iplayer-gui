@@ -22,9 +22,9 @@
 
     </div>
 
-    <form ng-submit="vm.submit()">
+    <div class="row">
 
-        <div class="row">
+        <form ng-submit="vm.submit()">
 
             <div class="col-xs-offset-2 col-xs-8">
 
@@ -65,22 +65,28 @@
 
                 </div>
 
-                <div ng-repeat="(key, type) in vm.allTypes" class="checkbox">
-                    <label>
-                        <input
-                            type="checkbox"
-                            ng-model="vm.types[key]" />
+                <div
+                    ng-repeat="(key, type) in vm.allTypes"
+                    class="checkbox checkbox-inline checkbox-circle checkbox-primary">
+
+                    <input
+                        id="checkbox_{{key}}_{{type}}"
+                        type="checkbox"
+                        ng-model="vm.types[key]" />
+
+                    <label for="checkbox_{{key}}_{{type}}">
                         {{ type }}
                     </label>
+
                 </div>
 
             </div>
 
-        </div>
+        </form>
 
-    </form>
+    </div>
 
-    <div class="row">
+    <div class="row height-300">
 
         <table class="table table-hover table-vertical-align">
 
@@ -88,8 +94,7 @@
                 <tr>
                     <th>Title</th>
                     <th>Episode</th>
-                    <th>Channel</th>
-                    <th colspan="2">Type</th>
+                    <th colspan="2">Channel</th>
                 </tr>
             </thead>
 
@@ -98,7 +103,6 @@
                     <td>{{ prog.title }}</td>
                     <td>{{ prog.episode }}</td>
                     <td>{{ prog.channel }}</td>
-                    <td>{{ vm.allTypes[prog.type] }}</td>
                     <td>
                         <div class="btn-group">
                             <button ng-click="vm.getInfo(prog)" class="btn btn-default">
@@ -117,7 +121,7 @@
 
     </div>
 
-    <div class="row">
+    <div class="row height-300">
 
         <table class="table table-hover table-vertical-align">
 

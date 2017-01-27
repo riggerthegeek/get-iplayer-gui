@@ -22,9 +22,13 @@ export default function (getIplayer, $scope) {
         });
 
     this.addToQueue = prog => {
-        this.queuePercent[prog.pid] = 0;
+        const repeat = this.queue.filter(({ pid }) => prog.pid === pid);
 
-        this.queue.push(prog);
+        if (repeat.length === 0) {
+            this.queuePercent[prog.pid] = 0;
+
+            this.queue.push(prog);
+        }
     };
 
     this.allTypes = {
@@ -52,7 +56,17 @@ export default function (getIplayer, $scope) {
             console.log("all complete");
         } else {
             return Promise.all(tasks)
-                .then(result => this.download())
+                .then(result => {
+                    this.queue = this.queue.map(queue => {
+                        if (result.includes(queue.pid)) {
+                            queue.complete = true;
+                        }
+
+                        return queue;
+                    });
+
+                    return this.download();
+                })
                 .catch(err => {
                     console.log(err);
                 });
@@ -65,7 +79,7 @@ export default function (getIplayer, $scope) {
             alert("@todo");
         });
 
-    this.queue = [{
+    this.queue = [/*{
         pid: "b00hr4lp"
     }, {
         pid: "b00hv1f4"
@@ -75,7 +89,7 @@ export default function (getIplayer, $scope) {
         pid: "b088fg48"
     }, {
         pid: "b08b7wd3"
-    }];
+    }*/];
 
     this.queuePercent = {};
 

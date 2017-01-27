@@ -110,8 +110,10 @@ export default class GetIplayer extends EventEmitter {
                 return;
             }
 
+            const typesStr = types.join(",");
+
             const cmd = spawn(getIplayer, [
-                `--type=${types.join(",")}`,
+                `--type=${typesStr}`,
                 "--nocopyright",
                 search
             ]);
@@ -122,7 +124,7 @@ export default class GetIplayer extends EventEmitter {
 
             cmd
                 .on("error", reject)
-                .on("close", () => resolve(GetIplayer.parseOutput(result)));
+                .on("close", () => resolve(GetIplayer.parseOutput(result, typesStr)));
 
         });
 
@@ -135,16 +137,18 @@ export default class GetIplayer extends EventEmitter {
      * objects
      *
      * @param {string} output
+     * @param {string} type
      * @returns {object[]}
      */
-    static parseOutput (output) {
+    static parseOutput (output, types) {
         return output.split("\n")
             .reduce((result, line) => {
                 /* Only interested with the data that starts in a number and colon */
-                const regex = /^(\d+):\s+(.*),\s+(.*)\s+-\s+(.*),\s+(.*),\s+(.*)$/;
+                const regexNoType = /^(\d+):\s+(.*)\s+-\s+(.*),\s+(.*),\s+(.*)$/;
+                const regexType = /^(\d+):\s+(.*),\s+(.*)\s+-\s+(.*),\s+(.*),\s+(.*)$/;
 
-                if (regex.test(line)) {
-                    const match = line.match(regex);
+                if (regexType.test(line)) {
+                    const match = line.match(regexType);
 
                     const id = match[1];
                     const type = match[2];
@@ -160,6 +164,23 @@ export default class GetIplayer extends EventEmitter {
                         pid,
                         title,
                         type
+                    });
+                } else if (regexNoType.test(line)) {
+                    const match = line.match(regexNoType);
+
+                    const id = match[1];
+                    const title = match[2];
+                    const episode = match[3];
+                    const channel = match[4];
+                    const pid = match[5];
+
+                    result.push({
+                        channel,
+                        episode,
+                        id,
+                        pid,
+                        title,
+                        type: types /* Single type */
                     });
                 }
 

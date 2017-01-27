@@ -1,2 +1,8 @@
 @import 'third-party/bootstrap';
+@import 'third-party/awesome-bootstrap-checkbox';
 @import 'third-party/fontawesome';
+
+.height-300 {
+    height: 300px;
+    overflow-y: scroll;
+}
