@@ -2,25 +2,71 @@
 
     <div class="row">
 
-        <div class="col-xs-3">
-            <button
-                ng-click="vm.download()"
-                type="button"
-                title="Download"
-                class="btn btn-success">
-                <i class="fa fa-fw fa-3x fa-play-circle"></i>
-            </button>
-        </div>
+        <nav class="navbar navbar-default navbar-fixed-top">
 
-        <div class="col-xs-3">
+            <div class="navbar-header">
 
-        </div>
+                <ul class="nav navbar-nav">
 
-        <div class="col-xs-3">
+                    <li>
+                        <a href="#" ng-click="vm.download()" title="Download">
+                            <i class="text-success fa fa-fw fa-3x fa-play"></i>
+                        </a>
+                    </li>
 
-        </div>
+                    <li>
+                        <a href="#" title="Stop">
+                            <i class="text-danger fa fa-fw fa-3x fa-square"></i>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" title="Refresh cache">
+                            <i class="text-primary fa fa-fw fa-3x fa-refresh"></i>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" title="Logs">
+                            <i class="fa fa-fw fa-3x fa-terminal"></i>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#" title="Preferences">
+                            <i class="text-primary fa fa-fw fa-3x fa-gear"></i>
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </nav>
 
     </div>
+
+    <!--<div class="row">-->
+
+        <!--<div class="col-xs-3">-->
+            <!--<button-->
+                <!--ng-click="vm.download()"-->
+                <!--type="button"-->
+                <!--title="Download"-->
+                <!--class="btn btn-success">-->
+                <!--<i class="fa fa-fw fa-3x fa-play-circle"></i>-->
+            <!--</button>-->
+        <!--</div>-->
+
+        <!--<div class="col-xs-3">-->
+
+        <!--</div>-->
+
+        <!--<div class="col-xs-3">-->
+
+        <!--</div>-->
+
+    <!--</div>-->
 
     <div class="row">
 
@@ -137,12 +183,12 @@
             <tbody>
                 <tr ng-repeat="prog in vm.queue">
                     <td>{{ prog.pid }}</td>
-                    <td>
-                        <div class="progress">
+                    <td style="vertical-align: middle !important;">
+                        <div class="progress" style="margin-top: 10px !important; margin-bottom: 10px !important;">
                             <div
                                 class="progress-bar"
                                 role="progressbar"
-                                style="min-width: 2em; width: {{ vm.queuePercent[prog.pid] || 0 }}%">
+                                style="min-width: 3.5em; width: {{ vm.queuePercent[prog.pid] || 0 }}%">
                                 {{ vm.queuePercent[prog.pid] || 0 }}%
                             </div>
                         </div>
