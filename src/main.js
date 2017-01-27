@@ -26,11 +26,13 @@ function createWindow () {
     mainWindow = new BrowserWindow({
         minimizable: false,
         maximizable: false,
-        maxHeight: 600,
-        maxWidth: 800,
+        maxHeight: 800,
+        maxWidth: 1000,
         minHeight: 600,
         minWidth: 800,
-        title: pkg.name
+        title: pkg.name,
+        height: 800,
+        width: 1000
     });
 
     const {webContents} = mainWindow;
