@@ -8,7 +8,7 @@ import {EventEmitter} from "events";
 
 /* Third-party modules */
 import moment from "moment";
-import {remote} from "electron";
+import { remote } from "electron";
 
 /* Files */
 
@@ -18,10 +18,8 @@ export default class GetIplayer extends EventEmitter {
 
     download (pid) {
 
-        const cwd = `${remote.app.getPath("temp")}/getIplayerGUI`;
-
         // @todo put in config
-        const outputPath = "/home/semms/Dropbox/Media/Downloaded\ Radio/Unprocessed";
+        const outputPath = "/tmp/home/semms/Dropbox/Media/Downloaded\ Radio/Unprocessed";
 
         return new Promise((resolve, reject) => {
 
@@ -30,9 +28,7 @@ export default class GetIplayer extends EventEmitter {
                 `--pid=${pid}`,
                 "--subdir",
                 `--output=${outputPath}`
-            ], {
-                cwd
-            });
+            ]);
 
             let result = "";
 
@@ -48,7 +44,11 @@ export default class GetIplayer extends EventEmitter {
 
             cmd
                 .on("error", reject)
-                .on("close", resolve);
+                .on("close", () => {
+                    this.emit("downloadComplete", pid);
+
+                    resolve(pid);
+                });
 
         });
 
@@ -95,13 +95,13 @@ export default class GetIplayer extends EventEmitter {
     /**
      * Search
      *
-     * Searches for a programme by type
+     * Searches for a programme by type(s)
      *
      * @param {string} search
-     * @param {string} type
+     * @param {string[]} types
      * @returns {Promise}
      */
-    search (search, type) {
+    search (search, types) {
 
         return new Promise((resolve, reject) => {
 
@@ -111,7 +111,7 @@ export default class GetIplayer extends EventEmitter {
             }
 
             const cmd = spawn(getIplayer, [
-                `--type=${type}`,
+                `--type=${types.join(",")}`,
                 "--nocopyright",
                 search
             ]);
@@ -141,23 +141,25 @@ export default class GetIplayer extends EventEmitter {
         return output.split("\n")
             .reduce((result, line) => {
                 /* Only interested with the data that starts in a number and colon */
-                const regex = /^(\d+):\s+(.*)\s+-\s+(.*),\s+(.*),\s+(.*)$/;
+                const regex = /^(\d+):\s+(.*),\s+(.*)\s+-\s+(.*),\s+(.*),\s+(.*)$/;
 
                 if (regex.test(line)) {
                     const match = line.match(regex);
 
                     const id = match[1];
-                    const title = match[2];
-                    const episode = match[3];
-                    const channel = match[4];
-                    const pid = match[5];
+                    const type = match[2];
+                    const title = match[3];
+                    const episode = match[4];
+                    const channel = match[5];
+                    const pid = match[6];
 
                     result.push({
-                        id,
-                        title,
-                        episode,
                         channel,
-                        pid
+                        episode,
+                        id,
+                        pid,
+                        title,
+                        type
                     });
                 }
 

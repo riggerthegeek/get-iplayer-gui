@@ -9,9 +9,23 @@ import { _ } from "lodash";
 
 /* Files */
 
-export default function (getIplayer, $q) {
+export default function (getIplayer, $scope) {
 
-    this.addToQueue = prog => this.queue.push(prog);
+    getIplayer
+        .on("downloadPercent", (pid, percent) => {
+            this.queuePercent[pid] = percent;
+
+            $scope.$apply();
+        })
+        .on("downloadComplete", pid => {
+            this.queuePercent[pid] = 100;
+        });
+
+    this.addToQueue = prog => {
+        this.queuePercent[prog.pid] = 0;
+
+        this.queue.push(prog);
+    };
 
     this.allTypes = {
         // liveradio: 'Live Radio',
@@ -23,22 +37,26 @@ export default function (getIplayer, $q) {
     };
 
     this.download = () => {
+        const concurrentDownloads = 2;
 
-        getIplayer.on("downloadPercent", (pid, percent) => {
-            console.log({
-                pid,
-                percent
-            });
-        });
+        const tasks = this.queue.reduce((result, { pid, complete }) => {
+            if (result.length < concurrentDownloads && !complete) {
+                result.push(getIplayer.download(pid));
+            }
 
-        return getIplayer.download("b00hr4lp")
-            .then(result => {
-                console.log(result);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+            return result;
+        }, []);
 
+        if (tasks.length === 0) {
+            /* All downloads complete */
+            console.log("all complete");
+        } else {
+            return Promise.all(tasks)
+                .then(result => this.download())
+                .catch(err => {
+                    console.log(err);
+                });
+        }
     };
 
     this.getInfo = prog => getIplayer.info(prog.pid)
@@ -47,7 +65,19 @@ export default function (getIplayer, $q) {
             alert("@todo");
         });
 
-    this.queue = [];
+    this.queue = [{
+        pid: "b00hr4lp"
+    }, {
+        pid: "b00hv1f4"
+    }, {
+        pid: "b087qjzk"
+    }, {
+        pid: "b088fg48"
+    }, {
+        pid: "b08b7wd3"
+    }];
+
+    this.queuePercent = {};
 
     this.running = false;
 
@@ -58,39 +88,21 @@ export default function (getIplayer, $q) {
     this.submit = () => {
         this.running = true;
 
-        const tasks = [];
+        const types = [];
 
         _.each(this.types, (selected, type) => {
             if (selected) {
-                const task = getIplayer.search(this.search, type)
-                    .then(result => ({
-                        result,
-                        type
-                    }));
-
-                tasks.push(task);
+                types.push(type);
             }
         });
 
-        return $q.all(tasks)
-            .then(data => {
-
+        return getIplayer.search(this.search, types)
+            .then(result => {
                 this.running = false;
-
-                const result = [];
-
-                const addType = type => prog => {
-                    prog.type = type;
-
-                    result.push(prog);
-                };
-
-                _.each(data, ({ result, type }) => {
-                    result.forEach(addType(type));
-                });
 
                 this.searchResult = result;
 
+                $scope.$apply();
             });
     };
 

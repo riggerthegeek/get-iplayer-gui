@@ -133,7 +133,17 @@
             <tbody>
                 <tr ng-repeat="prog in vm.queue">
                     <td>{{ prog.pid }}</td>
-                    <td>{{ prog.status }}</td>
+                    <td>
+                        <div class="progress">
+                            <div
+                                class="progress-bar"
+                                role="progressbar"
+                                style="min-width: 2em; width: {{ vm.queuePercent[prog.pid] || 0 }}%">
+                                {{ vm.queuePercent[prog.pid] || 0 }}%
+                            </div>
+                        </div>
+
+                    </td>
                     <td>{{ prog.title }}</td>
                     <td>{{ prog.episode }}</td>
                 </tr>
