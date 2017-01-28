@@ -28,7 +28,7 @@ export default (stateHelperProvider, $urlRouterProvider) => {
                     "content@": {
                         controller: "DownloadCtrl",
                         controllerAs: "vm",
-                        templateUrl: "views/controller/download.html"
+                        templateUrl: "src/views/controller/download.html"
                     }
                 }
             }]
