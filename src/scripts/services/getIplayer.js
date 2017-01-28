@@ -220,6 +220,7 @@ export default class GetIplayer extends EventEmitter {
 
                     let result = "";
 
+                    /* Weirdly, seems to need this */
                     cmd.stdout.on("data", data => result += data);
 
                     cmd
@@ -230,7 +231,7 @@ export default class GetIplayer extends EventEmitter {
                         .on("close", () => {
                             this.emit("cacheRefreshEnd");
 
-                            resolve();
+                            resolve(result);
                         });
 
                 });
