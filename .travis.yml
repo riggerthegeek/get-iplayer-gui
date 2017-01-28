@@ -28,6 +28,7 @@ before_deploy:
 deploy:
   provider: releases
   api_key:
+    secure: pkPArMgPwXNjBbLnH9QPgHyD6HhxGHLua5NEm5EhcGFviuYc5IqXOhDQkwOBJGEg1kf/5CGfGO0q9Dy+ad98RSTv1g/ON1TFRvAAM0JxILf85QebVQgv+Q+W/n8nqo8rO7nBM1tDwfUNeWiyj756OQ7L6Crw2+dFzSpsvDSfrjsMAebKQHie8X/4hnUedsUuUR3cRn6vDkWqG6iFrOdOYtzFMOwab0V5CoGTJrcvT8TMNpJUO90db+OFGn1SoMaLxc+b141dGzFGW3TJJsjPkeeHK/0ywBduN/OYCJ4cNZagpp5qiyIz4Y2X19GdIVJ3f8l8QYJuV4sLJfvKEA/GFDwo9QarseqFtKHbPEgfUDtHeaxyUMs4RhNSRUcy/m9Y61498f3zYHT3XurLe8Jp35jIYU+tXheN5F1zyVG60+2G57RB3WxIB0D1CFg/sb4vaKQ6/v06P/WmyLwszMjcjlVuSQ23MQim+yzri+nXqHulHwF+i1pTsSapkxEJLoul9ypQUFhmslH3S6TlXdJ4qOXOSdcRNs0DmtLTZFQ7Aq+7Kqo06tVNrpR0NH+qhGdZZUU4oZ3qnH7G56527kqGst1+aBZ3DeFw5idLf9ukezaxB7J7di3t9IMzQlrqlyKhIqmQfn93syVyWCrhHfWmsM29woAs2PC3gSkvlkWZVpE=
   file:
   - dist/armv7l.tar.gz
   - dist/osx.tar.gz
