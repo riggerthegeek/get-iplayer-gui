@@ -20,25 +20,36 @@ export default [
     function (getIplayer, logger, $scope, settings, $timeout, $uibModal) {
 
         getIplayer
-            .on("cacheRefreshStart", () => {
+            .on("CACHE_REFRESH_START", () => {
+                logger.log("Cache update started");
                 this.running = true;
 
                 $scope.$apply();
             })
-            .on("cacheRefreshEnd", () => {
+            .on("CACHE_REFRESH_END", () => {
+                logger.log("Cache update finishes");
                 this.running = false;
 
                 $scope.$apply();
             })
-            .on("downloadPercent", (pid, percent) => {
+            .on("CANNOT_FIND_PID", pid => {
+                logger.log(`Cannot find ${pid}`);
+
+                this.cannotFind.push(pid);
+
+                $scope.$apply();
+            })
+            .on("DOWNLOAD_PERCENT", (pid, percent) => {
+                logger.silly(`Download percent ${pid}`);
                 this.queuePercent[pid] = percent;
 
                 $scope.$apply();
             })
-            .on("downloadComplete", pid => {
+            .on("DOWNLOAD_COMPLETE", pid => {
+                logger.log(`Download completed ${pid}`);
                 this.queuePercent[pid] = 100;
             })
-            .on("fileInCache", pid => {
+            .on("FILE_IN_CACHE", pid => {
                 this.queue = this.queue.map(queue => {
                     if (queue.pid === pid) {
                         queue.complete = true;
@@ -50,7 +61,7 @@ export default [
                 // @todo display message
                 logger.log(`${pid} in cache`);
 
-                this.queuePercent[pid] = 100;
+                this.fileCache.push(pid);
                 $scope.$apply();
             });
 
@@ -75,6 +86,8 @@ export default [
         };
 
         this.allTypes = getIplayer.types;
+
+        this.cannotFind = [];
 
         this.download = () => {
             const concurrentDownloads = 5;
@@ -106,6 +119,8 @@ export default [
                     .catch(logger.error);
             }
         };
+
+        this.fileCache = [];
 
         this.getInfo = prog => getIplayer.info(prog.pid)
             .then(result => {

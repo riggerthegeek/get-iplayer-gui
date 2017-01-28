@@ -92,7 +92,7 @@ export default class GetIplayer extends EventEmitter {
             .then(downloaded => {
 
                 if (downloaded) {
-                    this.emit("fileInCache", pid);
+                    this.emit("FILE_IN_CACHE", pid);
                     return;
                 }
 
@@ -109,13 +109,16 @@ export default class GetIplayer extends EventEmitter {
 
                     this._addDownload(cmd);
 
+                    let currentPercent = null;
+
                     cmd.stdout.on("data", data => {
-                        console.log(data.toString());
 
                         const percent = GetIplayer.stringToPercent(data.toString());
 
                         if (percent !== null) {
-                            this.emit("downloadPercent", pid, percent);
+                            this.emit("DOWNLOAD_PERCENT", pid, percent);
+
+                            currentPercent = percent;
                         }
                     });
 
@@ -129,7 +132,11 @@ export default class GetIplayer extends EventEmitter {
                         .on("close", () => {
                             this._removeDownload(cmd);
 
-                            this.emit("downloadComplete", pid);
+                            if (currentPercent === null) {
+                                this.emit("CANNOT_FIND_PID", pid);
+                            } else {
+                                this.emit("DOWNLOAD_COMPLETE", pid);
+                            }
 
                             resolve(pid);
                         });
@@ -237,7 +244,7 @@ export default class GetIplayer extends EventEmitter {
 
                 return new Promise((resolve, reject) => {
 
-                    this.emit("cacheRefreshStart");
+                    this.emit("CACHE_REFRESH_START");
 
                     const cmd = this._spawn([
                         "--nocopyright",
@@ -257,7 +264,7 @@ export default class GetIplayer extends EventEmitter {
                             reject(err);
                         })
                         .on("close", () => {
-                            this.emit("cacheRefreshEnd");
+                            this.emit("CACHE_REFRESH_END");
 
                             resolve(result);
                         });

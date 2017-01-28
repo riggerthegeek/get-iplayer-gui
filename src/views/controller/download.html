@@ -191,7 +191,21 @@
                 <tr ng-repeat="prog in vm.queue">
                     <td>{{ prog.pid }}</td>
                     <td style="vertical-align: middle !important;">
-                        <div class="progress" style="margin-top: 10px !important; margin-bottom: 10px !important;">
+
+                        <div
+                            ng-if="vm.cannotFind.includes(prog.pid)">
+                            Unknown programme ID
+                        </div>
+
+                        <div
+                            ng-if="vm.fileCache.includes(prog.pid)">
+                            File already downloaded
+                        </div>
+
+                        <div
+                            ng-if="!vm.cannotFind.includes(prog.pid) && !vm.fileCache.includes(prog.pid)"
+                            class="progress"
+                            style="margin-top: 10px !important; margin-bottom: 10px !important;">
                             <div
                                 class="progress-bar"
                                 role="progressbar"
