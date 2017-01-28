@@ -49,6 +49,9 @@ export default [
 
                 // @todo display message
                 logger.log(`${pid} in cache`);
+
+                this.queuePercent[pid] = 100;
+                $scope.$apply();
             });
 
         this.addToQueue = prog => {
@@ -64,7 +67,7 @@ export default [
         this.allTypes = getIplayer.types;
 
         this.download = () => {
-            const concurrentDownloads = 2;
+            const concurrentDownloads = 5;
 
             const tasks = this.queue.reduce((result, { pid, complete }) => {
                 if (result.length < concurrentDownloads && !complete) {
@@ -153,6 +156,10 @@ export default [
             }).catch(() => {
                 logger.info("Closed settings modal");
             });
+        };
+
+        this.stop = () => {
+            getIplayer.emit("STOP_DOWNLOADS");
         };
 
         this.submit = () => {

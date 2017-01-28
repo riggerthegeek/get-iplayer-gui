@@ -33,8 +33,28 @@ export default class GetIplayer extends EventEmitter {
     constructor (logger, settings) {
         super();
 
+        this._downloads = [];
         this._logger = logger;
         this._settings = settings;
+
+        this.on("STOP_DOWNLOADS", () => this._removeDownload());
+    }
+
+    _addDownload (cmd) {
+        this._downloads.push(cmd);
+    }
+
+    _removeDownload (cmd = null) {
+        if (cmd) {
+            cmd.kill("SIGINT");
+
+            const index = this._downloads.indexOf(cmd);
+            this._downloads.splice(index, 1);
+
+            this._logger.info(`Download stopped. PID: ${cmd.pid}`);
+        } else {
+            this._downloads.forEach(prg => this._removeDownload(prg));
+        }
     }
 
     _spawn (args) {
@@ -87,6 +107,8 @@ export default class GetIplayer extends EventEmitter {
                         `--output=${outputPath}`
                     ]);
 
+                    this._addDownload(cmd);
+
                     cmd.stdout.on("data", data => {
                         const percent = GetIplayer.stringToPercent(data.toString());
 
@@ -97,10 +119,14 @@ export default class GetIplayer extends EventEmitter {
 
                     cmd
                         .on("error", err => {
+                            this._removeDownload(cmd);
+
                             this._logger.error(err);
                             reject(err);
                         })
                         .on("close", () => {
+                            this._removeDownload(cmd);
+
                             this.emit("downloadComplete", pid);
 
                             resolve(pid);
