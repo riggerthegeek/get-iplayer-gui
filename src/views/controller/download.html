@@ -21,7 +21,7 @@
                     </li>
 
                     <li>
-                        <a href="#" title="Refresh cache">
+                        <a href="#" ng-click="vm.refreshCache()" title="Refresh cache">
                             <i class="text-primary fa fa-fw fa-3x fa-refresh"></i>
                         </a>
                     </li>
@@ -188,8 +188,7 @@
                             <div
                                 class="progress-bar"
                                 role="progressbar"
-                                style="min-width: 3.5em; width: {{ vm.queuePercent[prog.pid] || 0 }}%">
-                                {{ vm.queuePercent[prog.pid] || 0 }}%
+                                style="width: {{ vm.queuePercent[prog.pid] || 0 }}%">
                             </div>
                         </div>
 

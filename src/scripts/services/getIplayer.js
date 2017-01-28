@@ -5,10 +5,13 @@
 /* Node modules */
 import {exec, spawn} from "child_process";
 import {EventEmitter} from "events";
+import fs from "fs";
+import path from "path";
 
 /* Third-party modules */
+import {_} from "lodash";
 import moment from "moment";
-// import { remote } from "electron";
+import {remote} from "electron";
 
 /* Files */
 
@@ -16,37 +19,85 @@ const getIplayer = "get_iplayer";
 
 export default class GetIplayer extends EventEmitter {
 
-    download (pid) {
+    get types () {
+        return {
+            // liveradio: "Live Radio",
+            // livetv: "Live TV",
+            // localfiles: "Local Files",
+            // podcast: "Podcast",
+            radio: "Radio",
+            tv: "TV"
+        };
+    }
 
-        // @todo put in config
-        const outputPath = "/tmp/home/semms/Dropbox/Media/Downloaded\ Radio/Unprocessed";
+    constructor (settings) {
+        super();
+
+        this._settings = settings;
+    }
+
+    cache (pid) {
+
+        const history = path.join(remote.app.getPath("home"), ".get_iplayer", "download_history");
 
         return new Promise((resolve, reject) => {
 
-            const cmd = spawn(getIplayer, [
-                "--nocopyright",
-                `--pid=${pid}`,
-                "--subdir",
-                `--output=${outputPath}`
-            ]);
+            fs.readFile(history, "utf8", (err, file) => {
 
-            cmd.stdout.on("data", data => {
-                const percent = GetIplayer.stringToPercent(data.toString());
-
-                if (percent !== null) {
-                    this.emit("downloadPercent", pid, percent);
+                if (err && err.code !== "ENOENT") {
+                    reject(err);
+                    return;
                 }
+
+                const regex = new RegExp(`${pid}\\\|`);
+
+                resolve(regex.test(file));
+
             });
 
-            cmd
-                .on("error", reject)
-                .on("close", () => {
-                    this.emit("downloadComplete", pid);
-
-                    resolve(pid);
-                });
-
         });
+
+    }
+
+    download (pid) {
+
+        return this.cache(pid)
+            .then(downloaded => {
+
+                if (downloaded) {
+                    this.emit("fileInCache", pid);
+                    return;
+                }
+
+                const outputPath = this._settings.downloadDir;
+
+                return new Promise((resolve, reject) => {
+
+                    const cmd = spawn(getIplayer, [
+                        "--nocopyright",
+                        `--pid=${pid}`,
+                        "--subdir",
+                        `--output=${outputPath}`
+                    ]);
+
+                    cmd.stdout.on("data", data => {
+                        const percent = GetIplayer.stringToPercent(data.toString());
+
+                        if (percent !== null) {
+                            this.emit("downloadPercent", pid, percent);
+                        }
+                    });
+
+                    cmd
+                        .on("error", reject)
+                        .on("close", () => {
+                            this.emit("downloadComplete", pid);
+
+                            resolve(pid);
+                        });
+
+                });
+            });
 
     }
 
@@ -71,20 +122,97 @@ export default class GetIplayer extends EventEmitter {
 
     refresh (force = false) {
 
-        return new Promise((resolve, reject) => {
+        const dir = path.join(remote.app.getPath("home"), ".get_iplayer");
 
-            const forceFlag = force ? "--force" : "";
+        const tasks = Object.keys(this.types).reduce((result, type) => {
 
-            exec(`${getIplayer} --nocopyright --refresh ${forceFlag}`, (err) => {
-                if (err) {
-                    reject(err);
+            const file = path.join(dir, `${type}.cache`);
+
+            const task = new Promise((resolve, reject) => {
+
+                if (force) {
+                    return resolve({
+                        type,
+                        update: true
+                    });
+                }
+
+                fs.stat(file, (err, stat) => {
+
+                    if (err && err.code !== "ENOENT") {
+                        reject(err);
+                        return;
+                    }
+
+                    let update = true;
+
+                    if (_.has(stat, "mtime")) {
+
+                        const modTime = stat.mtime;
+
+                        if ((Date.now() - modTime.getTime()) < this._settings.cacheAge) {
+                            update = false;
+                        }
+
+                    }
+
+                    resolve({
+                        type,
+                        update
+                    });
+
+                });
+
+            });
+
+            result.push(task);
+
+            return result;
+
+        }, []);
+
+        return Promise.all(tasks)
+            .then(result => {
+
+                const types = result.reduce((result, { type, update }) => {
+
+                    if (update) {
+                        result.push(type);
+                    }
+
+                    return result;
+
+                }, []);
+
+                if (types.length === 0) {
+                    /* Nothing to update */
                     return;
                 }
 
-                resolve();
-            });
+                const forceFlag = force ? "--force" : "";
 
-        });
+                return new Promise((resolve, reject) => {
+
+                    this.emit("cacheRefreshStart");
+
+                    const cmd = spawn(getIplayer, [
+                        "--nocopyright",
+                        "--refresh",
+                        `--type=${types.join(",")}`,
+                        forceFlag
+                    ]);
+
+                    cmd
+                        .on("error", reject)
+                        .on("close", () => {
+                            this.emit("cacheRefreshEnd");
+
+                            resolve();
+                        });
+
+                });
+
+            });
 
     }
 

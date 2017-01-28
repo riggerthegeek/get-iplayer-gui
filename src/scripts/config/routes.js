@@ -15,9 +15,6 @@ export default (stateHelperProvider, $urlRouterProvider) => {
             name: "app",
             url: "/",
             abstract: true,
-            resolve: {
-                // update: getIplayer => getIplayer.refresh()
-            },
             children: [{
                 name: "download",
                 data: {

@@ -27,12 +27,12 @@ import "angular-ui-router.statehelper";
 import "ng-page-title";
 
 /* Files */
-
 import configRoute from "./config/routes";
 
 import controllerDownload from "./controller/download";
 
 import serviceGetIplayer from "./services/getIplayer";
+import serviceSettings from "./services/settings";
 
 /* Create an empty template module - any cached templates will live in here */
 angular.module("templates.get-iplayer-gui", []);
@@ -71,6 +71,7 @@ app.controller("DownloadCtrl", controllerDownload);
 
 /*! Services */
 app.service("getIplayer", serviceGetIplayer);
+app.service("settings", serviceSettings);
 
 /*! Values */
 

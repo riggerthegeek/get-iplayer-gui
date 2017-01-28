@@ -9,9 +9,19 @@ import { _ } from "lodash";
 
 /* Files */
 
-export default function (getIplayer, $log, $scope) {
+export default function (getIplayer, $log, $scope, $timeout) {
 
     getIplayer
+        .on("cacheRefreshStart", () => {
+            this.running = true;
+
+            $scope.$apply();
+        })
+        .on("cacheRefreshEnd", () => {
+            this.running = false;
+
+            $scope.$apply();
+        })
         .on("downloadPercent", (pid, percent) => {
             this.queuePercent[pid] = percent;
 
@@ -19,6 +29,18 @@ export default function (getIplayer, $log, $scope) {
         })
         .on("downloadComplete", pid => {
             this.queuePercent[pid] = 100;
+        })
+        .on("fileInCache", pid => {
+            this.queue = this.queue.map(queue => {
+                if (queue.pid === pid) {
+                    queue.complete = true;
+                }
+
+                return queue;
+            });
+
+            // @todo display message
+            $log.log(`${pid} in cache`);
         });
 
     this.addToQueue = prog => {
@@ -31,14 +53,7 @@ export default function (getIplayer, $log, $scope) {
         }
     };
 
-    this.allTypes = {
-        // liveradio: "Live Radio",
-        // livetv: "Live TV",
-        // localfiles: "Local Files",
-        // podcast: "Podcast",
-        radio: "Radio",
-        tv: "TV"
-    };
+    this.allTypes = getIplayer.types;
 
     this.download = () => {
         const concurrentDownloads = 2;
@@ -53,7 +68,7 @@ export default function (getIplayer, $log, $scope) {
 
         if (tasks.length === 0) {
             /* All downloads complete */
-            $log("all complete");
+            $log.log("all complete");
         } else {
             return Promise.all(tasks)
                 .then(result => {
@@ -68,30 +83,22 @@ export default function (getIplayer, $log, $scope) {
                     return this.download();
                 })
                 .catch(err => {
-                    $log(err);
+                    $log.error(err);
                 });
         }
     };
 
     this.getInfo = prog => getIplayer.info(prog.pid)
         .then(result => {
-            $log(result);
+            $log.log(result);
             alert("@todo");
         });
 
-    this.queue = [/*{
-        pid: "b00hr4lp"
-    }, {
-        pid: "b00hv1f4"
-    }, {
-        pid: "b087qjzk"
-    }, {
-        pid: "b088fg48"
-    }, {
-        pid: "b08b7wd3"
-    }*/];
+    this.queue = [];
 
     this.queuePercent = {};
+
+    this.refreshCache = () => getIplayer.refresh(true);
 
     this.running = false;
 
@@ -124,5 +131,10 @@ export default function (getIplayer, $log, $scope) {
         tv: true,
         radio: true
     };
+
+    /* Begin with refreshing the cache */
+    $timeout(() => {
+        getIplayer.refresh();
+    }, 10);
 
 }
