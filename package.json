@@ -4,7 +4,7 @@
   "description": "GUI for get-iplayer",
   "main": "./src/main",
   "scripts": {
-    "clean": "rm -Rf build coverage src/scripts/config.js src/scripts/templates.js src/scripts/themes.js src/styles/*.css* src/styles/*.scss tmp",
+    "clean": "rm -Rf build coverage src/scripts/config.js src/scripts/templates.js src/scripts/themes.js src/styles/*.css* tmp",
     "ci": "npm test -s && npm run compile -s",
     "compile": "npm run precompile && electron-packager tmp --icon src/assets/img/logo.png --platform linux,win32 --arch ia32,x64,armv7l --out build --overwrite true --ignore .idea && npm run compile:mac",
     "compile:mac": "electron-packager tmp --icon src/assets/img/logo.icns --platform=darwin --arch=x64 --out build --overwrite true --ignore .idea",
