@@ -3,12 +3,15 @@
  */
 
 /* Node modules */
+import fs from "fs";
 import path from "path";
 
 /* Third-party modules */
 import {remote} from "electron";
 
 /* Files */
+
+const settingsFile = path.join(remote.app.getPath("userData"), "getIplayerSettings.json");
 
 export default class Settings {
 
@@ -28,16 +31,38 @@ export default class Settings {
 
     getSetting (setting) {
 
-        const settingsFile = path.join(remote.app.getPath("userData"), "getIplayerSettings.json");
-
         let settings;
         try {
-            settings = require(settingsFile);
+            /* Use read file so it never caches the file like require */
+            settings = JSON.parse(fs.readFileSync(settingsFile, "utf8"));
         } catch (err) {
             settings = {};
         }
 
+        console.log(settings);
+
         return settings[setting];
+
+    }
+
+    save (data = {}) {
+
+        const settings = JSON.stringify(data, null, 2);
+
+        return new Promise((resolve, reject) => {
+
+            fs.writeFile(settingsFile, settings, "utf8", err => {
+
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                resolve();
+
+            });
+
+        });
 
     }
 

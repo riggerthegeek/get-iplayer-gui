@@ -1,0 +1,41 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">
+        Settings
+    </h3>
+</div>
+
+<form ng-submit="vm.save()">
+    <div class="modal-body" id="modal-body">
+
+            <div class="form-group">
+                <label for="downloadDir">
+                    Download Directory
+                </label>
+
+                <input
+                    type="text"
+                    ng-model="vm.settings.downloadDir"
+                    class="form-control"
+                    id="downloadDir" />
+            </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <div class="btn-group">
+            <button
+                class="btn btn-default"
+                type="button"
+                ng-click="vm.cancel()">
+                Cancel
+            </button>
+
+            <button
+                class="btn btn-primary"
+                type="submit">
+                Save
+            </button>
+        </div>
+    </div>
+
+</form>

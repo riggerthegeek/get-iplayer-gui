@@ -32,6 +32,7 @@ import configRoute from "./config/routes";
 
 import controllerDownload from "./controller/download";
 import controllerLogs from "./controller/logs";
+import controllerSettings from "./controller/settings";
 
 import serviceGetIplayer from "./services/getIplayer";
 import serviceLogger from "./services/logger";
@@ -65,6 +66,7 @@ app.config(configRoute);
 /*! Controllers */
 app.controller("DownloadCtrl", controllerDownload);
 app.controller("LogsCtrl", controllerLogs);
+app.controller("SettingsCtrl", controllerSettings);
 
 /*! Directives */
 
