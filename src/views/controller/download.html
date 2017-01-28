@@ -46,33 +46,11 @@
 
     </div>
 
-    <!--<div class="row">-->
-
-        <!--<div class="col-xs-3">-->
-            <!--<button-->
-                <!--ng-click="vm.download()"-->
-                <!--type="button"-->
-                <!--title="Download"-->
-                <!--class="btn btn-success">-->
-                <!--<i class="fa fa-fw fa-3x fa-play-circle"></i>-->
-            <!--</button>-->
-        <!--</div>-->
-
-        <!--<div class="col-xs-3">-->
-
-        <!--</div>-->
-
-        <!--<div class="col-xs-3">-->
-
-        <!--</div>-->
-
-    <!--</div>-->
-
     <div class="row">
 
-        <form ng-submit="vm.submit()">
+        <div class="col-xs-offset-2 col-xs-8">
 
-            <div class="col-xs-offset-2 col-xs-8">
+            <form ng-submit="vm.submit()">
 
                 <div class="form-group">
 
@@ -111,24 +89,53 @@
 
                 </div>
 
-                <div
-                    ng-repeat="(key, type) in vm.allTypes"
-                    class="checkbox checkbox-inline checkbox-circle checkbox-primary">
+            </form>
 
-                    <input
-                        id="checkbox_{{key}}_{{type}}"
-                        type="checkbox"
-                        ng-model="vm.types[key]" />
+            <form ng-submit="vm.addPID()">
 
-                    <label for="checkbox_{{key}}_{{type}}">
-                        {{ type }}
-                    </label>
+                <div class="form-group">
+
+                    <div class="input-group">
+
+                        <input
+                            ng-model="vm.pid"
+                            type="text"
+                            class="form-control"
+                            placeholder="Add Programme ID..." />
+
+                        <span
+                            class="input-group-btn">
+
+                            <button
+                                class="btn btn-primary"
+                                type="submit">
+                                <i class="fa fa-fw fa-plus"></i>
+                            </button>
+
+                        </span>
+
+                    </div>
 
                 </div>
 
+            </form>
+
+            <div
+                ng-repeat="(key, type) in vm.allTypes"
+                class="checkbox checkbox-inline checkbox-circle checkbox-primary">
+
+                <input
+                    id="checkbox_{{key}}_{{type}}"
+                    type="checkbox"
+                    ng-model="vm.types[key]" />
+
+                <label for="checkbox_{{key}}_{{type}}">
+                    {{ type }}
+                </label>
+
             </div>
 
-        </form>
+        </div>
 
     </div>
 

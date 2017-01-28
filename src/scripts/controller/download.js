@@ -64,6 +64,14 @@ export default [
             }
         };
 
+        this.addPID = () => {
+            this.addToQueue({
+                pid: this.pid
+            });
+
+            this.pid = "";
+        };
+
         this.allTypes = getIplayer.types;
 
         this.download = () => {
@@ -130,6 +138,8 @@ export default [
                 logger.info("Closed log modal");
             });
         };
+
+        this.pid = "";
 
         this.queue = [];
 
