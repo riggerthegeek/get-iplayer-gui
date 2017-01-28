@@ -6,7 +6,6 @@
  */
 
 /* Node modules */
-import path from "path";
 
 /* Third-party modules */
 import {app, BrowserWindow, shell} from "electron";

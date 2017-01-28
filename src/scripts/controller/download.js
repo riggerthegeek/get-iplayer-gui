@@ -9,7 +9,7 @@ import { _ } from "lodash";
 
 /* Files */
 
-export default function (getIplayer, $scope) {
+export default function (getIplayer, $log, $scope) {
 
     getIplayer
         .on("downloadPercent", (pid, percent) => {
@@ -32,12 +32,12 @@ export default function (getIplayer, $scope) {
     };
 
     this.allTypes = {
-        // liveradio: 'Live Radio',
-        // livetv: 'Live TV',
-        // localfiles: 'Local Files',
-        // podcast: 'Podcast',
-        radio: 'Radio',
-        tv: 'TV'
+        // liveradio: "Live Radio",
+        // livetv: "Live TV",
+        // localfiles: "Local Files",
+        // podcast: "Podcast",
+        radio: "Radio",
+        tv: "TV"
     };
 
     this.download = () => {
@@ -53,7 +53,7 @@ export default function (getIplayer, $scope) {
 
         if (tasks.length === 0) {
             /* All downloads complete */
-            console.log("all complete");
+            $log("all complete");
         } else {
             return Promise.all(tasks)
                 .then(result => {
@@ -68,14 +68,14 @@ export default function (getIplayer, $scope) {
                     return this.download();
                 })
                 .catch(err => {
-                    console.log(err);
+                    $log(err);
                 });
         }
     };
 
     this.getInfo = prog => getIplayer.info(prog.pid)
         .then(result => {
-            console.log(result);
+            $log(result);
             alert("@todo");
         });
 
@@ -95,7 +95,7 @@ export default function (getIplayer, $scope) {
 
     this.running = false;
 
-    this.search = 'old harry';
+    this.search = "old harry";
 
     this.searchResult = [];
 
@@ -125,4 +125,4 @@ export default function (getIplayer, $scope) {
         radio: true
     };
 
-};
+}

@@ -8,7 +8,7 @@ import {EventEmitter} from "events";
 
 /* Third-party modules */
 import moment from "moment";
-import { remote } from "electron";
+// import { remote } from "electron";
 
 /* Files */
 
@@ -30,16 +30,12 @@ export default class GetIplayer extends EventEmitter {
                 `--output=${outputPath}`
             ]);
 
-            let result = "";
-
             cmd.stdout.on("data", data => {
                 const percent = GetIplayer.stringToPercent(data.toString());
 
                 if (percent !== null) {
                     this.emit("downloadPercent", pid, percent);
                 }
-
-                result += data;
             });
 
             cmd
@@ -79,7 +75,7 @@ export default class GetIplayer extends EventEmitter {
 
             const forceFlag = force ? "--force" : "";
 
-            exec(`${getIplayer} --nocopyright --refresh ${forceFlag}`, (err, stdout, stderr) => {
+            exec(`${getIplayer} --nocopyright --refresh ${forceFlag}`, (err) => {
                 if (err) {
                     reject(err);
                     return;
