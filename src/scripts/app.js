@@ -22,6 +22,7 @@ process.on("uncaughtException", err => {
 import angular from "angular";
 import "angular-hotkeys";
 import "angular-sanitize";
+import "angular-ui-bootstrap";
 import "angular-ui-router";
 import "angular-ui-router.statehelper";
 import "ng-page-title";
@@ -30,6 +31,7 @@ import "ng-page-title";
 import configRoute from "./config/routes";
 
 import controllerDownload from "./controller/download";
+import controllerLogs from "./controller/logs";
 
 import serviceGetIplayer from "./services/getIplayer";
 import serviceLogger from "./services/logger";
@@ -43,6 +45,7 @@ const modules = [
     "ngPageTitle",
     "ngSanitize",
     "templates.get-iplayer-gui",
+    "ui.bootstrap",
     "ui.router",
     "ui.router.stateHelper"
 ];
@@ -61,6 +64,7 @@ app.config(configRoute);
 
 /*! Controllers */
 app.controller("DownloadCtrl", controllerDownload);
+app.controller("LogsCtrl", controllerLogs);
 
 /*! Directives */
 

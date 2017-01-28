@@ -3,13 +3,14 @@
  */
 
 /* Node modules */
+import fs from "fs";
 
 /* Third-party modules */
 import { _ } from "lodash";
 
 /* Files */
 
-export default function (getIplayer, logger, $scope, $timeout) {
+export default function (getIplayer, logger, $scope, $timeout, $uibModal) {
 
     getIplayer
         .on("cacheRefreshStart", () => {
@@ -92,6 +93,33 @@ export default function (getIplayer, logger, $scope, $timeout) {
             alert("@todo");
         })
         .catch(logger.error);
+
+    this.logs = () => {
+        const modal = $uibModal.open({
+            controller: "LogsCtrl",
+            controllerAs: "vm",
+            resolve: {
+                logs: () => new Promise((resolve, reject) => {
+                    fs.readFile(logger.findLogPath(), "utf8", (err, logs) => {
+                        if (err && err.code !== "ENOENT") {
+                            reject(err);
+                            return;
+                        }
+
+                        resolve(logs);
+                    });
+                })
+            },
+            size: "lg",
+            templateUrl: "src/views/controller/logs.html"
+        });
+
+        modal.result.then(() => {
+            logger.info("Closed log modal");
+        }).catch(() => {
+            logger.info("Closed log modal");
+        });
+    };
 
     this.queue = [];
 

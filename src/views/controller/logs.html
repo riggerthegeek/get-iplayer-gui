@@ -1,0 +1,25 @@
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">Logs</h3>
+</div>
+
+<div class="modal-body" id="modal-body">
+    <pre>{{ vm.logs }}</pre>
+</div>
+
+<div class="modal-footer">
+    <div class="btn-group">
+        <button
+            class="btn btn-primary"
+            type="button"
+            ng-click="vm.ok()">
+            OK
+        </button>
+
+        <button
+            class="btn btn-danger"
+            type="button"
+            ng-click="vm.delete()">
+            Delete
+        </button>
+    </div>
+</div>
