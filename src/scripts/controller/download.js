@@ -9,7 +9,7 @@ import { _ } from "lodash";
 
 /* Files */
 
-export default function (getIplayer, $log, $scope, $timeout) {
+export default function (getIplayer, logger, $scope, $timeout) {
 
     getIplayer
         .on("cacheRefreshStart", () => {
@@ -40,7 +40,7 @@ export default function (getIplayer, $log, $scope, $timeout) {
             });
 
             // @todo display message
-            $log.log(`${pid} in cache`);
+            logger.log(`${pid} in cache`);
         });
 
     this.addToQueue = prog => {
@@ -68,7 +68,7 @@ export default function (getIplayer, $log, $scope, $timeout) {
 
         if (tasks.length === 0) {
             /* All downloads complete */
-            $log.log("all complete");
+            logger.log("all complete");
         } else {
             return Promise.all(tasks)
                 .then(result => {
@@ -82,17 +82,16 @@ export default function (getIplayer, $log, $scope, $timeout) {
 
                     return this.download();
                 })
-                .catch(err => {
-                    $log.error(err);
-                });
+                .catch(logger.error);
         }
     };
 
     this.getInfo = prog => getIplayer.info(prog.pid)
         .then(result => {
-            $log.log(result);
+            logger.log(result);
             alert("@todo");
-        });
+        })
+        .catch(logger.error);
 
     this.queue = [];
 
@@ -102,7 +101,7 @@ export default function (getIplayer, $log, $scope, $timeout) {
 
     this.running = false;
 
-    this.search = "old harry";
+    this.search = "";
 
     this.searchResult = [];
 
@@ -124,7 +123,8 @@ export default function (getIplayer, $log, $scope, $timeout) {
                 this.searchResult = result;
 
                 $scope.$apply();
-            });
+            })
+            .catch(logger.error);
     };
 
     this.types = {

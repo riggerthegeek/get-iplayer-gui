@@ -32,6 +32,7 @@ import configRoute from "./config/routes";
 import controllerDownload from "./controller/download";
 
 import serviceGetIplayer from "./services/getIplayer";
+import serviceLogger from "./services/logger";
 import serviceSettings from "./services/settings";
 
 /* Create an empty template module - any cached templates will live in here */
@@ -71,6 +72,7 @@ app.controller("DownloadCtrl", controllerDownload);
 
 /*! Services */
 app.service("getIplayer", serviceGetIplayer);
+app.service("logger", serviceLogger);
 app.service("settings", serviceSettings);
 
 /*! Values */

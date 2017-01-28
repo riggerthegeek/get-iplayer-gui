@@ -30,10 +30,16 @@ export default class GetIplayer extends EventEmitter {
         };
     }
 
-    constructor (settings) {
+    constructor (logger, settings) {
         super();
 
+        this._logger = logger;
         this._settings = settings;
+    }
+
+    _spawn (args) {
+        this._logger.info("New command spawned", getIplayer, args);
+        return spawn(getIplayer, args);
     }
 
     cache (pid) {
@@ -45,6 +51,7 @@ export default class GetIplayer extends EventEmitter {
             fs.readFile(history, "utf8", (err, file) => {
 
                 if (err && err.code !== "ENOENT") {
+                    this._logger.error(err);
                     reject(err);
                     return;
                 }
@@ -73,7 +80,7 @@ export default class GetIplayer extends EventEmitter {
 
                 return new Promise((resolve, reject) => {
 
-                    const cmd = spawn(getIplayer, [
+                    const cmd = this._spawn([
                         "--nocopyright",
                         `--pid=${pid}`,
                         "--subdir",
@@ -89,7 +96,10 @@ export default class GetIplayer extends EventEmitter {
                     });
 
                     cmd
-                        .on("error", reject)
+                        .on("error", err => {
+                            this._logger.error(err);
+                            reject(err);
+                        })
                         .on("close", () => {
                             this.emit("downloadComplete", pid);
 
@@ -105,9 +115,14 @@ export default class GetIplayer extends EventEmitter {
 
         return new Promise((resolve, reject) => {
 
-            exec(`${getIplayer} --nocopyright --pid=${pid} --info`, (err, stdout) => {
+            const cmd = `${getIplayer} --nocopyright --pid=${pid} --info`;
+
+            this._logger.info("New command executed", cmd);
+
+            exec(cmd, (err, stdout) => {
 
                 if (err) {
+                    this._logger.error(err);
                     reject(err);
                     return;
                 }
@@ -140,6 +155,7 @@ export default class GetIplayer extends EventEmitter {
                 fs.stat(file, (err, stat) => {
 
                     if (err && err.code !== "ENOENT") {
+                        this._logger.error(err);
                         reject(err);
                         return;
                     }
@@ -195,15 +211,22 @@ export default class GetIplayer extends EventEmitter {
 
                     this.emit("cacheRefreshStart");
 
-                    const cmd = spawn(getIplayer, [
+                    const cmd = this._spawn([
                         "--nocopyright",
                         "--refresh",
                         `--type=${types.join(",")}`,
                         forceFlag
                     ]);
 
+                    let result = "";
+
+                    cmd.stdout.on("data", data => result += data);
+
                     cmd
-                        .on("error", reject)
+                        .on("error", err => {
+                            this._logger.error(err);
+                            reject(err);
+                        })
                         .on("close", () => {
                             this.emit("cacheRefreshEnd");
 
@@ -236,7 +259,7 @@ export default class GetIplayer extends EventEmitter {
 
             const typesStr = types.join(",");
 
-            const cmd = spawn(getIplayer, [
+            const cmd = this._spawn([
                 `--type=${typesStr}`,
                 "--nocopyright",
                 search
@@ -247,7 +270,10 @@ export default class GetIplayer extends EventEmitter {
             cmd.stdout.on("data", data => result += data);
 
             cmd
-                .on("error", reject)
+                .on("error", err => {
+                    this._logger.error(err);
+                    reject(err);
+                })
                 .on("close", () => resolve(GetIplayer.parseOutput(result, typesStr)));
 
         });
