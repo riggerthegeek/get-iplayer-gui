@@ -110,6 +110,8 @@ export default class GetIplayer extends EventEmitter {
                     this._addDownload(cmd);
 
                     cmd.stdout.on("data", data => {
+                        console.log(data.toString());
+
                         const percent = GetIplayer.stringToPercent(data.toString());
 
                         if (percent !== null) {

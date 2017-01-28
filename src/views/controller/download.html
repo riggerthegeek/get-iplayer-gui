@@ -202,6 +202,11 @@
                     </td>
                     <td>{{ prog.title }}</td>
                     <td>{{ prog.episode }}</td>
+                    <td>
+                        <button ng-click="vm.remove(prog)">
+                            <i class="fa fa-times-circle"></i>
+                        </button>
+                    </td>
                 </tr>
             </tbody>
 

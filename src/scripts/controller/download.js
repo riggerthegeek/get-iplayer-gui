@@ -65,9 +65,11 @@ export default [
         };
 
         this.addPID = () => {
-            this.addToQueue({
-                pid: this.pid
-            });
+            if (this.pid) {
+                this.addToQueue({
+                    pid: this.pid
+                });
+            }
 
             this.pid = "";
         };
@@ -146,6 +148,16 @@ export default [
         this.queuePercent = {};
 
         this.refreshCache = () => getIplayer.refresh(true);
+
+        this.remove = prog => {
+            this.queue = this.queue.reduce((result, item) => {
+                if (item.pid !== prog.pid) {
+                    result.push(item);
+                }
+
+                return result;
+            }, []);
+        };
 
         this.running = false;
 
