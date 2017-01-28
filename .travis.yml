@@ -1,0 +1,41 @@
+language: node_js
+
+node_js:
+- lts/*
+
+matrix:
+  fast_finish: true
+
+dist: trusty
+
+sudo: required
+
+before_script:
+- sudo dpkg --add-architecture i386
+- sudo add-apt-repository ppa:jonathonf/wine -y
+- sudo apt-get update -qq
+- sudo apt-get install wine32 -y
+- wine --version
+- export DISPLAY=:99.0;
+- sh -e /etc/init.d/xvfb start;
+
+script:
+- npm run ci -s
+
+before_deploy:
+- npm run dist -s
+
+deploy:
+  provider: releases
+  api_key:
+  file:
+  - dist/armv7l.tar.gz
+  - dist/osx.tar.gz
+  - dist/linux32.tar.gz
+  - dist/linux64.tar.gz
+  - dist/win32.zip
+  - dist/win64.zip
+  skip_cleanup: true
+  on:
+    repo: riggerthegeek/get-iplayer-gui
+    tags: true
