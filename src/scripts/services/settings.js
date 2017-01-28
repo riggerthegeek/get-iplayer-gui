@@ -26,7 +26,7 @@ export default class Settings {
     getAll () {
         return {
             downloadDir: this.downloadDir
-        }
+        };
     }
 
     getSetting (setting) {
@@ -38,8 +38,6 @@ export default class Settings {
         } catch (err) {
             settings = {};
         }
-
-        console.log(settings);
 
         return settings[setting];
 
