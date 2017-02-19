@@ -104,6 +104,7 @@ export default class GetIplayer extends EventEmitter {
                         "--nocopyright",
                         `--pid=${pid}`,
                         "--subdir",
+                        "--whitespace",
                         `--output=${outputPath}`
                     ]);
 
