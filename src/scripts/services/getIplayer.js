@@ -250,6 +250,7 @@ export default class GetIplayer extends EventEmitter {
                     const cmd = this._spawn([
                         "--nocopyright",
                         "--refresh",
+                        "--nopurge",
                         `--type=${types.join(",")}`,
                         forceFlag
                     ]);
