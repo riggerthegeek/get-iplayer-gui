@@ -58,6 +58,9 @@ export default class GetIplayer extends EventEmitter {
     }
 
     _spawn (args) {
+        /* Never purge */
+        args.push("--nopurge");
+
         this._logger.info("New command spawned", getIplayer, args);
         return spawn(getIplayer, args);
     }
@@ -151,7 +154,7 @@ export default class GetIplayer extends EventEmitter {
 
         return new Promise((resolve, reject) => {
 
-            const cmd = `${getIplayer} --nocopyright --pid=${pid} --info`;
+            const cmd = `${getIplayer} --nopurge --nocopyright --pid=${pid} --info`;
 
             this._logger.info("New command executed", cmd);
 
@@ -250,7 +253,6 @@ export default class GetIplayer extends EventEmitter {
                     const cmd = this._spawn([
                         "--nocopyright",
                         "--refresh",
-                        "--nopurge",
                         `--type=${types.join(",")}`,
                         forceFlag
                     ]);
